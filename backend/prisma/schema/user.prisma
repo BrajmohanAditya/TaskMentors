@@ -15,7 +15,8 @@ model User {
   isVerified       Boolean   @default(false)
   
   // Relations
-  // purchasedCourses Course[]  @relation("PurchasedCourses")
+  createdCourses   Course[] @relation("CreatedCourses")
+  purchasedCourses Course[] @relation("PurchasedCourses")
 
   // Prisma automatically handles timestamps like this
   createdAt        DateTime  @default(now())

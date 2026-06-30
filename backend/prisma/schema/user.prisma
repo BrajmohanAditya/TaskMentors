@@ -1,0 +1,23 @@
+enum Role {
+  user
+  admin
+}
+
+model User {
+  id               String    @id @default(uuid()) 
+  name             String
+  email            String    @unique
+  password         String
+  mobileNo         BigInt    
+  role             Role      @default(user)
+  otp              String?   
+  otpExpiry        DateTime?
+  isVerified       Boolean   @default(false)
+  
+  // Relations
+  // purchasedCourses Course[]  @relation("PurchasedCourses")
+
+  // Prisma automatically handles timestamps like this
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+}

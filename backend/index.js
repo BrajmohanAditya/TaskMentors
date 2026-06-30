@@ -1,19 +1,19 @@
 import express from "express";
-import { connectDB } from "./src/config/db.js";
 import { ENV } from "./src/config/env.js";
 import cookieParser from "cookie-parser";
 import cors from "cors";
-import userRoute from "./src/routes/user.route.js";
-import courseRoute from "./src/routes/course.route.js";
-import moduleRoute from "./src/routes/module.route.js";
-import paymentRoute from "./src/routes/payment.route.js";
-import heroRoutes from "./src/routes/hero.route.js";
-import quizRoute from "./src/routes/quiz/quiz.route.js";
-import quizQuestionRoute from "./src/routes/quiz/quiz.question.route.js";
-import quizResultRoute from "./src/routes/quiz/quizResult.route.js";
-import premiumStudentRoute from "./src/routes/premium.student.route.js";
-import successBoardRoute from "./src/routes/success.board.route.js";
-import qualifiedMentorRoute from "./src/routes/qualifiedMentors.js";
+import { connectDB } from "./src/config/DBConnection.js";
+// import userRoute from "./src/routes/user.route.js";
+// import courseRoute from "./src/routes/course.route.js";
+// import moduleRoute from "./src/routes/module.route.js";
+// import paymentRoute from "./src/routes/payment.route.js";
+// import heroRoutes from "./src/routes/hero.route.js";
+// import quizRoute from "./src/routes/quiz/quiz.route.js";
+// import quizQuestionRoute from "./src/routes/quiz/quiz.question.route.js";
+// import quizResultRoute from "./src/routes/quiz/quizResult.route.js";
+// import premiumStudentRoute from "./src/routes/premium.student.route.js";
+// import successBoardRoute from "./src/routes/success.board.route.js";
+// import qualifiedMentorRoute from "./src/routes/qualifiedMentors.js";
    
 const app = express();
 
@@ -27,17 +27,17 @@ app.use(
   }),
 );
    
-app.use("/api", userRoute);
-app.use("/api/course", courseRoute);
-app.use("/api/module", moduleRoute);
-app.use("/api/payment", paymentRoute);
-app.use("/api/hero", heroRoutes);
-app.use("/api/quiz", quizRoute);
-app.use("/api/quizQuestion", quizQuestionRoute);
-app.use("/api/quizResult", quizResultRoute);
-app.use("/api/premiumStudent", premiumStudentRoute);
-app.use("/api/successBoard", successBoardRoute);
-app.use("/api/mentor", qualifiedMentorRoute);
+// app.use("/api", userRoute);
+// app.use("/api/course", courseRoute);
+// app.use("/api/module", moduleRoute);
+// app.use("/api/payment", paymentRoute);
+// app.use("/api/hero", heroRoutes);
+// app.use("/api/quiz", quizRoute);
+// app.use("/api/quizQuestion", quizQuestionRoute);
+// app.use("/api/quizResult", quizResultRoute);
+// app.use("/api/premiumStudent", premiumStudentRoute);
+// app.use("/api/successBoard", successBoardRoute);
+// app.use("/api/mentor", qualifiedMentorRoute);
 
 app.get("/", (req, res) => {
   res.send("Hello World!");
@@ -56,7 +56,18 @@ app.use((err, req, res, next) => {
   });
 });
 
-app.listen(ENV.PORT || 10000, "0.0.0.0", () => {
-  console.log(`Server running on port ${ENV.PORT || 10000}`);
-  connectDB();
-});
+const startServer = async () => {
+  try {
+    await connectDB();
+    console.log("Database connected successfully");
+
+    app.listen(ENV.PORT || 10000, "0.0.0.0", () => {
+      console.log(`Server running on port ${ENV.PORT || 10000}`);
+    });
+  } catch (error) {
+    console.error("Failed to connect to database:", error);
+    process.exit(1);
+  }
+};
+
+startServer();

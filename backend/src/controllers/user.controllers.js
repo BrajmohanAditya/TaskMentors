@@ -1,4 +1,5 @@
-import { User } from "../models/user.model.js";
+import { prisma } from "../config/DBConnection.js";
+
 import bcryptjs from "bcryptjs";
 import { ENV } from "../config/env.js";
 import jwt from "jsonwebtoken";
@@ -18,7 +19,9 @@ export const Register = async (req, res, next) => {
       });
     }
 
-    let user = await User.findOne({ email });
+    let user = await prisma.user.findUnique({
+      where: { email },
+    });
 
     if (user && user.isVerified) {
       return res.status(401).json({
@@ -37,23 +40,26 @@ export const Register = async (req, res, next) => {
 
     let newUser;
     if (user) {
-      user.name = name;
-      user.password = hashPassword;
-      user.mobileNo = mobileNo;
-      user.otp = otp;
-      user.otpExpiry = otpExpiry;
-
-      await user.save(); // UPDATE kiya, Naya create nahi kiya
-      newUser = user;
+      newUser = await prisma.user.update({
+        where: { email },
+        data: {
+          name,
+          password: hashPassword,
+          mobileNo: BigInt(mobileNo),
+          otp,
+          otpExpiry,
+        },
+      });
     } else {
-      // Ye aapka purana likha hua code hai jab user sach me naya ho
-      newUser = await User.create({
-        name,
-        email,
-        mobileNo,
-        password: hashPassword,
-        otp: otp,
-        otpExpiry: otpExpiry,
+      newUser = await prisma.user.create({
+        data: {
+          name,
+          email,
+          mobileNo: BigInt(mobileNo),
+          password: hashPassword,
+          otp,
+          otpExpiry,
+        },
       });
     }
 
@@ -66,12 +72,13 @@ export const Register = async (req, res, next) => {
     return res.status(201).json({
       message: `OTP has been sent`,
       success: true,
-      user: { _id: newUser._id, email: newUser.email },
+      user: { id: newUser.id, _id: newUser.id, email: newUser.email },
     });
   } catch (error) {
     next(error);
   }
 };
+
 
 export const Login = async (req, res, next) => {
   try {
@@ -84,7 +91,9 @@ export const Login = async (req, res, next) => {
       });
     }
 
-    const user = await User.findOne({ email });
+    const user = await prisma.user.findUnique({
+      where: { email },
+    });
     if (!user) {
       return res.status(401).json({
         message: "Invalid credentials",
@@ -101,7 +110,7 @@ export const Login = async (req, res, next) => {
       });
     }
 
-    const token = jwt.sign({ userId: user._id }, ENV.JWT_SECRET, {
+    const token = jwt.sign({ userId: user.id }, ENV.JWT_SECRET, {
       expiresIn: "1d",
     });
 
@@ -113,16 +122,11 @@ export const Login = async (req, res, next) => {
     });
 
     // Remove password before sending to frontend
-    const userWithoutPassword = user.toObject();
-    delete userWithoutPassword.password;
-
-    if (user.role === "admin") {
-      return res.status(201).json({
-        message: `welcome ${user.name}`,
-        success: true,
-        user: userWithoutPassword,
-      });
+    const { password: _, ...userWithoutPassword } = user;
+    if (userWithoutPassword.mobileNo) {
+      userWithoutPassword.mobileNo = userWithoutPassword.mobileNo.toString();
     }
+    userWithoutPassword._id = userWithoutPassword.id;
 
     return res.status(201).json({
       message: `welcome ${user.name}`,
@@ -136,8 +140,10 @@ export const Login = async (req, res, next) => {
 
 export const getUser = async (req, res, next) => {
   try {
-    const userId = req.user._id;
-    const user = await User.findById(userId).select("-password");
+    const userId = req.user.id || req.user._id;
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+    });
 
     if (!user) {
       return res.status(401).json({
@@ -145,10 +151,17 @@ export const getUser = async (req, res, next) => {
         success: false,
       });
     }
+
+    const { password: _, ...userWithoutPassword } = user;
+    if (userWithoutPassword.mobileNo) {
+      userWithoutPassword.mobileNo = userWithoutPassword.mobileNo.toString();
+    }
+    userWithoutPassword._id = userWithoutPassword.id;
+
     return res.status(201).json({
       message: "User found",
       success: true,
-      user: user,
+      user: userWithoutPassword,
     });
   } catch (error) {
     next(error);
@@ -185,7 +198,9 @@ export const verifyOTP = async (req, res, next) => {
     }
 
     // 1. Database mein user ko uske email se dhundein
-    const user = await User.findOne({ email });
+    const user = await prisma.user.findUnique({
+      where: { email },
+    });
 
     if (!user) {
       return res
@@ -207,18 +222,25 @@ export const verifyOTP = async (req, res, next) => {
     }
 
     // 4. Agar OTP sahi hai, toh User ko Verify kardo aur purana OTP hata do
-    user.isVerified = true;
-    user.otp = null;
-    user.otpExpiry = null;
-    await user.save(); // Database me save karo
+    const updatedUser = await prisma.user.update({
+      where: { email },
+      data: {
+        isVerified: true,
+        otp: null,
+        otpExpiry: null,
+      },
+    });
 
     // 5. Ab unhe Login karwane ke liye Token (Cookie) de do
-    const token = jwt.sign({ userId: user._id }, ENV.JWT_SECRET, {
+    const token = jwt.sign({ userId: updatedUser.id }, ENV.JWT_SECRET, {
       expiresIn: "7d",
     });
 
-    const userWithoutPassword = user.toObject();
-    delete userWithoutPassword.password;
+    const { password: _, ...userWithoutPassword } = updatedUser;
+    if (userWithoutPassword.mobileNo) {
+      userWithoutPassword.mobileNo = userWithoutPassword.mobileNo.toString();
+    }
+    userWithoutPassword._id = userWithoutPassword.id;
 
     return res
       .status(200)
@@ -229,7 +251,7 @@ export const verifyOTP = async (req, res, next) => {
         sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
       })
       .json({
-        message: `Welcome ${user.name}`,
+        message: `Welcome ${updatedUser.name}`,
         success: true,
         user: userWithoutPassword,
       });
@@ -252,7 +274,9 @@ export const googleLogin = async (req, res) => {
     const { email, name } = ticket.getPayload();
 
     // 3. Check if user already exists in your database
-    let user = await User.findOne({ email });
+    let user = await prisma.user.findUnique({
+      where: { email },
+    });
 
     if (!user) {
       // 4. If new user, create them.
@@ -260,22 +284,27 @@ export const googleLogin = async (req, res) => {
       const randomPassword = Math.random().toString(36).slice(-8);
       const hashPassword = await bcryptjs.hash(randomPassword, 10);
 
-      user = await User.create({
-        name,
-        email,
-        password: hashPassword,
-        mobileNo: 0, // Dummy number
-        isVerified: true, // Google emails are already verified! No OTP needed.
+      user = await prisma.user.create({
+        data: {
+          name,
+          email,
+          password: hashPassword,
+          mobileNo: 0, // Dummy number
+          isVerified: true, // Google emails are already verified! No OTP needed.
+        },
       });
     }
 
     // 5. Generate JWT Token
-    const jwtToken = jwt.sign({ userId: user._id }, ENV.JWT_SECRET, {
+    const jwtToken = jwt.sign({ userId: user.id }, ENV.JWT_SECRET, {
       expiresIn: "7d",
     });
 
-    const userWithoutPassword = user.toObject();
-    delete userWithoutPassword.password;
+    const { password: _, ...userWithoutPassword } = user;
+    if (userWithoutPassword.mobileNo) {
+      userWithoutPassword.mobileNo = userWithoutPassword.mobileNo.toString();
+    }
+    userWithoutPassword._id = userWithoutPassword.id;
 
     // 6. Set the Cookie and send response
     return res

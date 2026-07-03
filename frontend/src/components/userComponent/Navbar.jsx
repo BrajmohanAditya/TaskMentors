@@ -62,11 +62,6 @@ const Navbar = () => {
       });
     } else {
       navItems.push({
-        label: "Student Dashboard",
-        icon: LayoutDashboard,
-        onClick: () => navigate("/studentdashboard"), 
-      });
-      navItems.push({
         label: "My Courses",
         icon: BookOpen,
         onClick: () => navigate("/yourAllPurchasedCourse"),

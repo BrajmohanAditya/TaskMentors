@@ -3,7 +3,7 @@ import { ENV } from "./src/config/env.js";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import { connectDB } from "./src/config/DBConnection.js";
-// import userRoute from "./src/routes/user.route.js";
+import userRoute from "./src/routes/user.route.js";
 // import courseRoute from "./src/routes/course.route.js";
 // import moduleRoute from "./src/routes/module.route.js";
 // import paymentRoute from "./src/routes/payment.route.js";
@@ -27,7 +27,7 @@ app.use(
   }),
 );
    
-// app.use("/api", userRoute);
+app.use("/api", userRoute);
 // app.use("/api/course", courseRoute);
 // app.use("/api/module", moduleRoute);
 // app.use("/api/payment", paymentRoute);

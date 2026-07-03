@@ -12,6 +12,7 @@ const Register = () => {
   const { mutate, isPending } = userRegisterHook();
   const { mutate: googleMutate } = userGoogleLoginHook();
   const navigate = useNavigate();
+  
   const registerFormHandler = (data) => {
     mutate(data, {
       onSuccess: () => {
@@ -19,6 +20,7 @@ const Register = () => {
       },
     });
   };
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-indigo-50 via-white to-indigo-100 px-4 py-6 sm:py-0">
       <div className="w-full max-w-md bg-white rounded-2xl shadow-xl border border-gray-100 p-5">

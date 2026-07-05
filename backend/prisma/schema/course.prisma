@@ -1,21 +1,21 @@
 model Course {
-  id           String   @id @default(uuid())
-  title        String
-  description  String
-  thumbnail    String?
-  thumbnailId  String?  @map("thumbnail_id")
-  amount       Float
+  id          String  @id @default(uuid())
+  title       String
+  description String
+  thumbnail   String?
+  thumbnailId String? @map("thumbnail_id")
+  amount      Float
 
   // Relation: jo user ne course create kiya (userId = foreign key)
-  userId       String
-  creator      User     @relation("CreatedCourses", fields: [userId], references: [id])
+  userId  String
+  creator User   @relation("CreatedCourses", fields: [userId], references: [id])
 
   // Relation: jo users ne course purchase kiya
-  purchasers   User[]   @relation("PurchasedCourses")
+  purchasers User[] @relation("PurchasedCourses")
 
   // Relation: course ke modules (baad mein Module model banayenge)
   // modules   Module[]
 
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

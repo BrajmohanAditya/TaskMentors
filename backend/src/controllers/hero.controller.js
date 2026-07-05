@@ -1,5 +1,5 @@
 import cloudinary from "../config/cloudinary.js";
-import { Hero } from "../models/hero.schema.js";
+import { prisma } from "../config/DBConnection.js";
 
 // @desc    Create a new Hero item (Exam or Banner)
 // @route   POST /api/hero
@@ -27,14 +27,14 @@ export const createHeroItem = async (req, res) => {
        timeout: 120000,
     });
 
-    const newHeroItem = new Hero({
-      type,
-      title: title || "", // title is optional for banners
-      imageUrl: uploadRes.secure_url,
-      imageId: uploadRes.public_id,
+    const newHeroItem = await prisma.hero.create({
+      data: {
+        type,
+        title: title || null, // title is optional for banners
+        imageUrl: uploadRes.secure_url,
+        imageId: uploadRes.public_id,
+      }
     });
-
-    await newHeroItem.save();
 
     return res.status(201).json({
       success: true,
@@ -51,7 +51,7 @@ export const createHeroItem = async (req, res) => {
 // @route   GET /api/hero
 export const getHeroItems = async (req, res) => {
   try {
-    const items = await Hero.find({});
+    const items = await prisma.hero.findMany();
     
     // You can group them here or let frontend handle it
     const upcomingExams = items.filter(item => item.type === "upcoming_exam");
@@ -73,7 +73,9 @@ export const getHeroItems = async (req, res) => {
 export const deleteHeroItem = async (req, res) => {
   try {
     const { id } = req.params;
-    const item = await Hero.findById(id);
+    const item = await prisma.hero.findUnique({
+      where: { id },
+    });
 
     if (!item) {
       return res.status(404).json({ success: false, message: "Hero item not found" });
@@ -84,7 +86,9 @@ export const deleteHeroItem = async (req, res) => {
       await cloudinary.uploader.destroy(item.imageId);
     }
 
-    await Hero.findByIdAndDelete(id);
+    await prisma.hero.delete({
+      where: { id },
+    });
 
     return res.status(200).json({
       success: true,
@@ -95,3 +99,4 @@ export const deleteHeroItem = async (req, res) => {
     return res.status(500).json({ success: false, message: "Internal server error" });
   }
 };
+

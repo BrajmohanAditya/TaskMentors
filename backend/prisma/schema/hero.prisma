@@ -1,0 +1,14 @@
+enum HeroType {
+  upcoming_exam
+  banner
+}
+
+model Hero {
+  id        String   @id @default(uuid())
+  type      HeroType
+  title     String?
+  imageUrl  String
+  imageId   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

@@ -20,7 +20,7 @@ const ExamsTable = ({ examsData, deleteHero, isDeleting }) => {
           <tbody className="divide-y divide-slate-100">
             {examsData?.map((exam) => (
               <tr
-                key={exam._id}
+                key={exam.id}
                 className="hover:bg-slate-50 transition-colors bg-white"
               >
                 {/* Logo Column */}
@@ -66,14 +66,14 @@ const ExamsTable = ({ examsData, deleteHero, isDeleting }) => {
                     </button>
                     <button
                       onClick={() => {
-                        deleteHero(exam._id);
-                        setDeletingId(exam._id);
+                        deleteHero(exam.id);
+                        setDeletingId(exam.id);
                       }}
-                      disabled={isDeleting && deletingId === exam._id}
+                      disabled={isDeleting && deletingId === exam.id}
                       className="text-red-500 hover:text-red-600 transition-colors cursor-pointer disabled:opacity-50"
                       title="Delete"
                     >
-                      {isDeleting && deletingId === exam._id ? (
+                      {isDeleting && deletingId === exam.id ? (
                         <Loader2 className="w-4 h-4 animate-spin" />
                       ) : (
                         <Trash2 className="w-4 h-4" />
@@ -117,7 +117,7 @@ export const BannerTable = ({ bannersData, deleteHero, isDeleting }) => {
           <tbody className="divide-y divide-slate-100">
             {bannersData?.map((banner) => (
               <tr
-                key={banner._id}
+                key={banner.id}
                 className="hover:bg-slate-50 transition-colors bg-white"
               >
                 <td className="p-4">
@@ -162,14 +162,14 @@ export const BannerTable = ({ bannersData, deleteHero, isDeleting }) => {
                     </button>
                     <button
                       onClick={() => {
-                        deleteHero(banner._id);
-                        setDeletingId(banner._id);
+                        deleteHero(banner.id);
+                        setDeletingId(banner.id);
                       }}
-                      disabled={isDeleting && deletingId === banner._id}
+                      disabled={isDeleting && deletingId === banner.id}
                       className="text-red-500 hover:text-red-600 transition-colors cursor-pointer disabled:opacity-50"
                       title="Delete"
                     >
-                      {isDeleting &&  deletingId === banner._id  ? (
+                      {isDeleting &&  deletingId === banner.id  ? (
                         <Loader2 className="w-4 h-4 animate-spin" />
                       ) : (
                         <Trash2 className="w-4 h-4" />

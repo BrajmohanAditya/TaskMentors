@@ -1,11 +1,11 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   registerApi,
   loginApi,
   getUserApi,
   logOutApi,
   verifyOtpApi,
-   googleLoginApi,
+  googleLoginApi,
 } from "../api/user.api";
 import { toast } from "sonner";
 
@@ -25,10 +25,13 @@ export const userRegisterHook = () => {
 };
 
 export const userLoginHook = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: loginApi,
     onSuccess: (data) => {
       toast.success(data.message);
+      queryClient.setQueryData(["get-user"], data);
+      queryClient.invalidateQueries({ queryKey: ["get-user"] });
     },
     onError: (error) => {
       const message =
@@ -40,10 +43,13 @@ export const userLoginHook = () => {
 };
 
 export const userLogoutHook = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: logOutApi,
     onSuccess: (data) => {
       toast.success(data.message);
+      queryClient.setQueryData(["get-user"], null);
+      queryClient.invalidateQueries({ queryKey: ["get-user"] });
     },
     onError: (error) => {
       const message =
@@ -70,10 +76,13 @@ export const GetUserHook = () => {
 };
 
 export const userVerifyOtpHook = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: verifyOtpApi,
     onSuccess: (data) => {
       toast.success(data.message);
+      queryClient.setQueryData(["get-user"], data);
+      queryClient.invalidateQueries({ queryKey: ["get-user"] });
       // You might want to navigate to the homepage or login page here using useNavigate()
     },
     onError: (error) => {
@@ -85,10 +94,13 @@ export const userVerifyOtpHook = () => {
 };
 
 export const userGoogleLoginHook = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: googleLoginApi,
     onSuccess: (data) => {
       toast.success(data.message);
+      queryClient.setQueryData(["get-user"], data);
+      queryClient.invalidateQueries({ queryKey: ["get-user"] });
     },
     onError: (error) => {
       const message =
@@ -98,3 +110,4 @@ export const userGoogleLoginHook = () => {
     },
   });
 };
+

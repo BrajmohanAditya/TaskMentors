@@ -61,7 +61,7 @@ const DashboardSidebar = () => {
           <Menu className="w-6 h-6" />
         </button>
         <h1 className="text-xl font-black text-slate-900 tracking-tight">
-          Tejas Defence
+          Task Mentors
         </h1>
       </div>
 
@@ -91,7 +91,7 @@ const DashboardSidebar = () => {
             {/* Title and Subtitle */}
             <div className="flex flex-col min-w-0">
               <h1 className="text-base lg:text-lg font-black text-slate-900 tracking-tight truncate lg:overflow-visible lg:whitespace-nowrap leading-none">
-                Tejas Defence
+                Task Mentors
               </h1>
               <div className="flex items-center gap-1.5 mt-1.5">
                 <span className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse shrink-0"></span>

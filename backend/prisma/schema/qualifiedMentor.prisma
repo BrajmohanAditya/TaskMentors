@@ -1,0 +1,12 @@
+model QualifiedMentor {
+  id             String   @id @default(uuid())
+  name           String
+  subject        String
+  experience     String?
+  qualifications String
+  examName       String?
+  imageUrl       String?  @default("")
+  imageId        String?  @default("")
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}

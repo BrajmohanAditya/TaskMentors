@@ -65,7 +65,7 @@ export const Register = async (req, res, next) => {
 
     await sendEmail(
       email,
-      "Tejas Defence",
+      "Task Mentors",
       `Hi ${name},\n\nYour OTP to complete registration is: ${otp}\n\nIt will expire in 10 minute`,
     );
 

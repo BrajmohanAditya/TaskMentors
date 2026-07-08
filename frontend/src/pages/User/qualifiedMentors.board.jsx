@@ -156,6 +156,18 @@ const QualifiedMentorsDisplay = () => {
               {/* Content Body */}
               <div className="px-6 pb-8 flex-1 flex flex-col">
                 <div className="space-y-4 flex-1 flex flex-col justify-center">
+                  {/* Target Exam */}
+                  {mentor.examName && (
+                    <div className="bg-indigo-50/40 p-4 rounded-xl border border-indigo-100/60 shadow-sm hover:shadow-md hover:bg-indigo-50/70 transition-all duration-300">
+                      <h4 className="text-[10px] font-bold text-indigo-600 uppercase tracking-widest mb-1 flex items-center gap-1.5">
+                        Target Exam
+                      </h4>
+                      <div className="text-[13.5px] font-extrabold text-indigo-700 leading-relaxed">
+                        {mentor.examName}
+                      </div>
+                    </div>
+                  )}
+
                   {/* Qualifications */}
                   {mentor.qualifications && (
                     <div className="bg-blue-50/40 p-4 rounded-xl border border-blue-100/60 shadow-sm hover:shadow-md hover:bg-blue-50/70 transition-all duration-300">

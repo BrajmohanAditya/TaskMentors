@@ -47,6 +47,7 @@ const QualifiedMentors = () => {
                 <tr className="bg-slate-100/50 border-b border-slate-200 text-sm font-semibold text-slate-600">
                   <th className="p-4 whitespace-nowrap">Mentor</th>
                   <th className="p-4 whitespace-nowrap">Subject</th>
+                  <th className="p-4 whitespace-nowrap">Exam</th>
                   <th className="p-4 whitespace-nowrap">Qualifications</th>
                   <th className="p-4 whitespace-nowrap">Experience</th>
                   <th className="p-4 text-right whitespace-nowrap">Actions</th>
@@ -85,6 +86,10 @@ const QualifiedMentors = () => {
                         <BookOpen className="w-4 h-4 text-slate-400" />
                         <span className="font-medium">{item.subject}</span>
                       </div>
+                    </td>
+
+                    <td className="p-4 text-slate-700">
+                      <span className="font-semibold text-blue-600 bg-blue-50 px-2 py-1 rounded-md text-xs">{item.examName || "N/A"}</span>
                     </td>
 
                     <td className="p-4 text-slate-600">
@@ -131,14 +136,14 @@ const QualifiedMentors = () => {
                 {/* Empty State Desktop */}
                 {isLoading ? (
                   <tr>
-                    <td colSpan="5" className="p-12 text-center text-slate-500">
+                    <td colSpan="6" className="p-12 text-center text-slate-500">
                       <Loader2 className="w-6 h-6 animate-spin mx-auto mb-2 text-blue-600" />
                       Loading mentors...
                     </td>
                   </tr>
                 ) : mentorsData.length === 0 && (
                   <tr>
-                    <td colSpan="5" className="p-12 text-center text-slate-500">
+                    <td colSpan="6" className="p-12 text-center text-slate-500">
                       No mentors found. Click "+ Add Mentor" to add your first
                       one!
                     </td>
@@ -192,6 +197,12 @@ const QualifiedMentors = () => {
                   <span className="font-semibold text-slate-800 flex items-center gap-1">
                     <GraduationCap className="w-3 h-3 text-yellow-500"/>
                     {item.qualifications}
+                  </span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-slate-500 text-xs">Target Exam</span>
+                  <span className="font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded text-xs">
+                    {item.examName || "N/A"}
                   </span>
                 </div>
               </div>

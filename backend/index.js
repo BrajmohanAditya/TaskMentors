@@ -13,7 +13,7 @@ import heroRoutes from "./src/routes/hero.route.js";
 // import quizResultRoute from "./src/routes/quiz/quizResult.route.js";
 // import premiumStudentRoute from "./src/routes/premium.student.route.js";
 // import successBoardRoute from "./src/routes/success.board.route.js";
-// import qualifiedMentorRoute from "./src/routes/qualifiedMentors.js";
+import qualifiedMentorRoute from "./src/routes/qualifiedMentors.js";
    
 const app = express();
 
@@ -37,7 +37,7 @@ app.use("/api/hero", heroRoutes);
 // app.use("/api/quizResult", quizResultRoute);
 // app.use("/api/premiumStudent", premiumStudentRoute);
 // app.use("/api/successBoard", successBoardRoute);
-// app.use("/api/mentor", qualifiedMentorRoute);
+app.use("/api/mentor", qualifiedMentorRoute);
 
 app.get("/", (req, res) => {
   res.send("Hello World!");

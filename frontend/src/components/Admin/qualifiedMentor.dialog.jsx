@@ -32,6 +32,7 @@ const QualifiedMentorDialog = ({ editingMentor, onCloseEdit }) => {
         subject: editingMentor.subject,
         experience: editingMentor.experience,
         qualifications: editingMentor.qualifications,
+        examName: editingMentor.examName,
       });
     }
   }, [editingMentor, resetForm]);
@@ -52,6 +53,7 @@ const QualifiedMentorDialog = ({ editingMentor, onCloseEdit }) => {
     formData.append("subject", data.subject);
     if (data.experience) formData.append("experience", data.experience);
     if (data.qualifications) formData.append("qualifications", data.qualifications);
+    if (data.examName) formData.append("examName", data.examName);
     
     if (data.image && data.image[0]) {
       formData.append("image", data.image[0]);
@@ -103,6 +105,20 @@ const QualifiedMentorDialog = ({ editingMentor, onCloseEdit }) => {
                 placeholder="Subject Taught (e.g., Mathematics, Physics)"
                 className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
+
+              {/* Target Exam Dropdown */}
+              <select
+                {...register("examName", { required: true })}
+                className="w-full p-3 border rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-700 font-medium"
+              >
+                <option value="" disabled selected hidden>Select target exam...</option>
+                <option value="SSC">SSC</option>
+                <option value="Railway">Railway</option>
+                <option value="Bank">Bank</option>
+                <option value="UPSC">UPSC</option>
+                <option value="State PCS">State PCS</option>
+                <option value="Defence">Defence</option>
+              </select>
 
               <div className="flex gap-4">
                 {/* Experience */}

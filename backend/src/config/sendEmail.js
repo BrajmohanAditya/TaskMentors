@@ -11,7 +11,7 @@ export const sendEmail = async (email, subject, message) => {
       return;
     }
     await resend.emails.send({
-      from: "Tejas Defence<noreply@tejasdefence.com>", 
+      from: "Task Mentors <noreply@taskmentors.com>", 
       to: email,
       subject: subject,
       text: message,

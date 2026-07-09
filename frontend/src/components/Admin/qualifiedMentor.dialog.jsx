@@ -61,7 +61,7 @@ const QualifiedMentorDialog = ({ editingMentor, onCloseEdit }) => {
 
     if (editingMentor) {
       updateMutate(
-        { id: editingMentor._id, data: formData },
+        { id: editingMentor.id, data: formData },
         { onSuccess: () => handleOpenChange(false) }
       );
     } else {

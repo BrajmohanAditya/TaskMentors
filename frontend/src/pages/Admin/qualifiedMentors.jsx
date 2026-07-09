@@ -56,7 +56,7 @@ const QualifiedMentors = () => {
               <tbody className="divide-y divide-slate-100">
                 {mentorsData.map((item) => (
                   <tr
-                    key={item._id}
+                    key={item.id}
                     className="hover:bg-slate-50 transition-colors group"
                   >
                     <td className="p-4">
@@ -121,7 +121,7 @@ const QualifiedMentors = () => {
                         <button
                           onClick={(e) => {
                             e.stopPropagation();
-                            handleDelete(item._id, item.name);
+                            handleDelete(item.id, item.name);
                           }}
                           className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
                           title="Delete Mentor"
@@ -158,7 +158,7 @@ const QualifiedMentors = () => {
         <div className="grid grid-cols-1 gap-4 md:hidden">
           {mentorsData.map((item) => (
             <div
-              key={item._id}
+              key={item.id}
               className="bg-white border border-slate-200 rounded-xl p-4 flex flex-col gap-4 shadow-sm hover:border-slate-300 transition-colors"
             >
               {/* Card Header */}
@@ -221,7 +221,7 @@ const QualifiedMentors = () => {
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
-                    handleDelete(item._id, item.name);
+                    handleDelete(item.id, item.name);
                   }}
                   className="flex-1 flex justify-center items-center gap-2 py-2 px-3 text-sm font-medium text-slate-600 bg-slate-100 hover:bg-red-50 hover:text-red-700 rounded-lg transition-colors border border-transparent hover:border-red-100"
                 >

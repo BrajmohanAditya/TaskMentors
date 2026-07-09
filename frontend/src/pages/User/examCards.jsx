@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Landmark,
   ShieldCheck,
@@ -193,7 +194,8 @@ const examCategories = [
   },
 ];
 
-const ExamCards = ({ onSelectCategory }) => {
+const ExamCards = () => {
+  const navigate = useNavigate();
   const [filter, setFilter] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -273,7 +275,18 @@ const ExamCards = ({ onSelectCategory }) => {
               return (
                 <div
                   key={category.id}
-                  onClick={() => onSelectCategory && onSelectCategory(category.id)}
+                  onClick={() => {
+                    const examMap = {
+                      banking: "Bank",
+                      ssc: "SSC",
+                      railways: "Railway",
+                      upsc: "UPSC",
+                      pcs: "State PCS",
+                      defence: "Defence",
+                    };
+                    const targetExam = examMap[category.id] || "All";
+                    navigate("/mentors", { state: { defaultExam: targetExam } });
+                  }}
                   className={`group relative flex flex-col justify-between h-full bg-white border ${category.borderColor} ${category.hoverBorderColor} rounded-2xl p-6 shadow-sm ${category.shadow} hover:-translate-y-2 transition-all duration-300 cursor-pointer overflow-hidden`}
                 >
                   {/* Top Color Accent Bar */}
